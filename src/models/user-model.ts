@@ -5,5 +5,5 @@ export interface IUser {
   email: string;
   password: string;
   username: string;
-  posts: IPost[];
+  posts?: IPost[];
 }
