@@ -1,9 +1,12 @@
-import { MultipartFile } from "@fastify/multipart";
 import { prisma } from "../../prisma/prismaClient";
 
-import path from "path";
 import { saveImage } from "../utils/saveImage";
 import { IPost } from "../models/post-model";
+import { z } from "zod";
+import { postToUpdateSchema } from "../schemas/postsSchema";
+import { updateImage } from "../utils/updateImage";
+
+type PostToUpdate = z.infer<typeof postToUpdateSchema>;
 
 export class PostController {
   async create(post: IPost, userId: number) {
@@ -41,5 +44,36 @@ export class PostController {
     });
 
     return posts;
+  }
+
+  async update(postToUpdate: PostToUpdate, postId: number) {
+    const { content, file, title } = postToUpdate;
+
+    const attachment = await prisma.attachment.findUnique({
+      where: {
+        postId,
+      },
+    });
+
+    const path = await updateImage(attachment?.path, file);
+
+    await prisma.post.update({
+      where: {
+        id: postId,
+      },
+      data: {
+        title,
+        content,
+
+        attachments: {
+          update: {
+            data: {
+              name: file.filename,
+              path,
+            },
+          },
+        },
+      },
+    });
   }
 }

@@ -1,7 +1,11 @@
 import { FastifyInstance } from "fastify";
 import { fastifyMultipart } from "@fastify/multipart";
 import { PostController } from "../controllers/post-controller";
-import { postsSchema } from "../schemas/postsSchema";
+import {
+  postToUpdateParamsSchema,
+  postToUpdateSchema,
+  postsSchema,
+} from "../schemas/postsSchema";
 import { auth } from "../middleware/auth";
 
 const postController = new PostController();
@@ -51,6 +55,22 @@ export async function postRoutes(app: FastifyInstance) {
       }
 
       return reply.status(200).send(post);
+    }
+  );
+
+  app.put(
+    "/post/:postId",
+    {
+      preHandler: auth,
+    },
+    async (req, reply) => {
+      const postToUpdate = postToUpdateSchema.parse(req.body);
+
+      const { postId } = postToUpdateParamsSchema.parse(req.params);
+
+      postController.update(postToUpdate, Number(postId));
+
+      reply.send(201);
     }
   );
 }
