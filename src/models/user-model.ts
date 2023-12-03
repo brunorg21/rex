@@ -6,4 +6,14 @@ export interface IUser {
   password: string;
   username: string;
   posts?: IPost[];
+  avatarUrl?: string;
+}
+
+export interface IUserToAuth {
+  id?: number;
+  email: string;
+  password: string;
+  username?: string;
+  posts?: IPost[];
+  avatarUrl?: string;
 }
