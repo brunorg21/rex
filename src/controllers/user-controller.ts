@@ -10,20 +10,21 @@ import { saveImage } from "../utils/saveImage";
 type UserToUpdate = z.infer<typeof userToUpdateSchema>;
 export class UserController {
   async create(user: IUser) {
-    const { email, password, username, avatarUrl } = user;
+    const { email, password, username } = user;
 
     const passwordHash = await hash(password, 8);
 
-    const destination = await saveImage(avatarUrl);
-
-    await prisma.user.create({
+    const userCreated = await prisma.user.create({
       data: {
         email,
         password: passwordHash,
         username,
-        avatar_url: destination,
       },
     });
+
+    const token = generateToken(userCreated.id);
+
+    return { token, userCreated };
   }
 
   async login(userToAuth: IUserToAuth) {
@@ -39,7 +40,7 @@ export class UserController {
 
     const token = generateToken(user.id);
 
-    return { passwordMatch, token };
+    return { passwordMatch, token, user };
   }
 
   async update(userToUpdate: UserToUpdate, userId: number) {

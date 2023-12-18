@@ -15,26 +15,24 @@ export async function userRoutes(app: FastifyInstance) {
       fileSize: 1048576 * 25,
     },
     attachFieldsToBody: "keyValues",
-    onFile: (part: any) => {
-      part.value = {
-        filename: part.filename,
-        mimetype: part.mimetype,
-        data: part.toBuffer(),
-      };
-    },
   });
-  app.post("/user", (request, reply) => {
+  app.post("/user", async (request, reply) => {
     const user = userSchema.parse(request.body);
 
-    userController.create(user);
+    const { token, userCreated } = await userController.create(user);
 
-    reply.status(201).send();
+    reply.status(201).send({
+      user: userCreated,
+      token,
+    });
   });
 
   app.post("/user/login", async (request, reply) => {
     const userToAuth = userSchemaToLogin.parse(request.body);
 
-    const { passwordMatch, token } = await userController.login(userToAuth);
+    const { passwordMatch, token, user } = await userController.login(
+      userToAuth
+    );
 
     if (!passwordMatch) {
       reply.status(400).send("Usuário ou senha inválidos");
@@ -42,7 +40,7 @@ export async function userRoutes(app: FastifyInstance) {
 
     request.headers.authorization = token;
 
-    reply.status(200).send({ token });
+    reply.status(200).send({ token, user });
   });
 
   app.put(

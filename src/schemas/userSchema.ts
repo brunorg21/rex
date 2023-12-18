@@ -4,12 +4,6 @@ export const userSchema = z.object({
   username: z.string(),
   email: z.string().email(),
   password: z.string().max(10).min(6),
-  avatarUrl: z
-    .any()
-    .optional()
-    .refine((file) => !!file && file.mimetype.startsWith("image"), {
-      message: "Somente arquivos de imagem são permitidos",
-    }),
 });
 
 export const userSchemaToLogin = z.object({
