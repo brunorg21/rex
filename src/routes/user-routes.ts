@@ -10,12 +10,6 @@ import fastifyMultipart from "@fastify/multipart";
 
 const userController = new UserController();
 export async function userRoutes(app: FastifyInstance) {
-  app.register(fastifyMultipart, {
-    limits: {
-      fileSize: 1048576 * 25,
-    },
-    attachFieldsToBody: "keyValues",
-  });
   app.post("/user", async (request, reply) => {
     const user = userSchema.parse(request.body);
 

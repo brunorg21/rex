@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.6.3",
+    "@types/nodemailer": "^6.4.14",
     "tsx": "^3.12.10",
     "typescript": "^5.2.2"
   }

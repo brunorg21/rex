@@ -4,6 +4,7 @@ import { userRoutes } from "./routes/user-routes";
 import { prisma } from "../prisma/prismaClient";
 import { postRoutes } from "./routes/post-routes";
 import { commentRoutes } from "./routes/comment-routes";
+import { emailRoute } from "./routes/email-route";
 
 const app = fastify();
 
@@ -15,6 +16,7 @@ app.register(cors, {
 app.register(commentRoutes);
 app.register(userRoutes);
 app.register(postRoutes);
+app.register(emailRoute);
 
 app
   .listen({
