@@ -3,18 +3,35 @@ import { IUser, IUserToAuth } from "../models/user-model";
 import { compare, hash } from "bcryptjs";
 import { generateToken } from "../utils/generateToken";
 import { z } from "zod";
-import { userToUpdateSchema } from "../schemas/userSchema";
+import {
+  userSchema,
+  userSchemaToLogin,
+  userToUpdateSchema,
+} from "../schemas/userSchema";
 import { updateImage } from "../utils/updateImage";
 import { saveImage } from "../utils/saveImage";
+import { FastifyReply, FastifyRequest } from "fastify";
 
 type UserToUpdate = z.infer<typeof userToUpdateSchema>;
 export class UserController {
-  async create(user: IUser) {
-    const { email, password, username } = user;
+  async create(request: FastifyRequest, reply: FastifyReply) {
+    const { email, password, username } = userSchema.parse(request.body);
+
+    const userAlreadyExists = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (userAlreadyExists) {
+      return reply.status(401).send({
+        message: "Usuário já cadastrado!",
+      });
+    }
 
     const passwordHash = await hash(password, 8);
 
-    const userCreated = await prisma.user.create({
+    const user = await prisma.user.create({
       data: {
         email,
         password: passwordHash,
@@ -22,25 +39,38 @@ export class UserController {
       },
     });
 
-    const token = generateToken(userCreated.id);
+    const token = generateToken(user.id);
 
-    return { token, userCreated };
+    return reply.status(201).send({ token, user });
   }
 
-  async login(userToAuth: IUserToAuth) {
-    const { email, password } = userToAuth;
+  async login(request: FastifyRequest, reply: FastifyReply) {
+    const { email, password } = userSchemaToLogin.parse(request.body);
 
-    const user = await prisma.user.findUniqueOrThrow({
+    const user = await prisma.user.findUnique({
       where: {
         email,
       },
     });
+    if (!user) {
+      return reply.status(400).send({
+        message: "Usuário ou senha inválidos ⚠️⚠️⚠️!",
+      });
+    }
 
     const passwordMatch = await compare(password, user.password);
 
     const token = generateToken(user.id);
 
-    return { passwordMatch, token, user };
+    if (!passwordMatch) {
+      reply.status(400).send({
+        message: "Usuário ou senha inválidos ⚠️⚠️⚠️!",
+      });
+    }
+
+    request.headers.authorization = token;
+
+    reply.status(200).send({ token, user });
   }
 
   async update(userToUpdate: UserToUpdate, userId: number) {

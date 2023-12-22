@@ -11,30 +11,11 @@ import fastifyMultipart from "@fastify/multipart";
 const userController = new UserController();
 export async function userRoutes(app: FastifyInstance) {
   app.post("/user", async (request, reply) => {
-    const user = userSchema.parse(request.body);
-
-    const { token, userCreated } = await userController.create(user);
-
-    reply.status(201).send({
-      user: userCreated,
-      token,
-    });
+    await userController.create(request, reply);
   });
 
   app.post("/user/login", async (request, reply) => {
-    const userToAuth = userSchemaToLogin.parse(request.body);
-
-    const { passwordMatch, token, user } = await userController.login(
-      userToAuth
-    );
-
-    if (!passwordMatch) {
-      reply.status(400).send("Usuário ou senha inválidos");
-    }
-
-    request.headers.authorization = token;
-
-    reply.status(200).send({ token, user });
+    await userController.login(request, reply);
   });
 
   app.put(

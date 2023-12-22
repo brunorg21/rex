@@ -18,6 +18,7 @@ model User {
   avatar_url String?
   posts      Post[]
   comments   Comments[]
+  Likes      Likes[]
 }
 
 model Post {
@@ -29,6 +30,20 @@ model Post {
   userId      Int
   attachments Attachment?
   comments    Comments[]
+  isRepost    Boolean?    @default(false)
+  originalId  Int?
+  Likes       Likes[]
+}
+
+model Likes {
+  id         Int       @id @default(autoincrement())
+  user       User      @relation(fields: [userId], references: [id])
+  userId     Int
+  posts      Post?     @relation(fields: [postId], references: [id])
+  postId     Int?
+  comments   Comments? @relation(fields: [commentsId], references: [id])
+  commentsId Int?
+  quantity   Int
 }
 
 model Attachment {
@@ -48,4 +63,5 @@ model Comments {
   user      User     @relation(fields: [userId], references: [id])
   post      Post     @relation(fields: [postId], references: [id])
   createdAt DateTime @default(now())
+  Likes     Likes[]
 }
