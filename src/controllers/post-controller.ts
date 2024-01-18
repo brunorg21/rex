@@ -29,6 +29,28 @@ export class PostController {
     });
   }
 
+  async getUniquePost(postId: number) {
+    const posts = await prisma.post.findMany({
+      where: {
+        id: postId,
+      },
+      orderBy: {
+        id: "asc",
+      },
+      include: {
+        attachments: {},
+        comments: {},
+        likes: true,
+      },
+    });
+
+    const postsWithLikesCount = posts.map((post) => ({
+      ...post,
+      likesCount: post.likes.length,
+    }));
+
+    return postsWithLikesCount;
+  }
   async getAllPosts(userId: number) {
     const posts = await prisma.post.findMany({
       where: {
@@ -40,10 +62,16 @@ export class PostController {
       include: {
         attachments: {},
         comments: {},
+        likes: true,
       },
     });
 
-    return posts;
+    const postsWithLikesCount = posts.map((post) => ({
+      ...post,
+      likesCount: post.likes.length,
+    }));
+
+    return postsWithLikesCount;
   }
 
   async update(postToUpdate: PostToUpdate, postId: number) {

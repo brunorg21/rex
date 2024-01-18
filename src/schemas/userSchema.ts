@@ -4,6 +4,7 @@ export const userSchema = z.object({
   username: z.string(),
   email: z.string().email(),
   password: z.string().max(20).min(6),
+  name: z.string()
 });
 
 export const userSchemaToLogin = z.object({

@@ -19,6 +19,24 @@ model User {
   posts      Post[]
   comments   Comments[]
   Likes      Likes[]
+  name       String
+  follower   Follower[]
+}
+
+model Follower {
+  id                  Int     @id @default(autoincrement())
+  follower_username   String
+  follower_name       String
+  follower_avatar_url String?
+  User                User?   @relation(fields: [userId], references: [id])
+  userId              Int?
+}
+
+model Tag {
+  id      Int    @id @default(autoincrement())
+  tagName String
+  Post    Post?  @relation(fields: [postId], references: [id])
+  postId  Int?
 }
 
 model Post {
@@ -30,9 +48,8 @@ model Post {
   userId      Int
   attachments Attachment?
   comments    Comments[]
-  isRepost    Boolean?    @default(false)
-  originalId  Int?
-  Likes       Likes[]
+  likes       Likes[]
+  tag         Tag[]
 }
 
 model Likes {
@@ -43,7 +60,6 @@ model Likes {
   postId     Int?
   comments   Comments? @relation(fields: [commentsId], references: [id])
   commentsId Int?
-  quantity   Int
 }
 
 model Attachment {

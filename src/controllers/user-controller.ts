@@ -11,11 +11,12 @@ import {
 import { updateImage } from "../utils/updateImage";
 import { saveImage } from "../utils/saveImage";
 import { FastifyReply, FastifyRequest } from "fastify";
+import { parseCookies, setCookie } from "nookies";
 
 type UserToUpdate = z.infer<typeof userToUpdateSchema>;
 export class UserController {
   async create(request: FastifyRequest, reply: FastifyReply) {
-    const { email, password, username } = userSchema.parse(request.body);
+    const { email, password, username, name } = userSchema.parse(request.body);
 
     const userAlreadyExists = await prisma.user.findUnique({
       where: {
@@ -36,6 +37,7 @@ export class UserController {
         email,
         password: passwordHash,
         username,
+        name,
       },
     });
 
@@ -44,8 +46,8 @@ export class UserController {
     return reply.status(201).send({ token, user });
   }
 
-  async login(request: FastifyRequest, reply: FastifyReply) {
-    const { email, password } = userSchemaToLogin.parse(request.body);
+  async login(req: FastifyRequest, res: FastifyReply) {
+    const { email, password } = userSchemaToLogin.parse(req.body);
 
     const user = await prisma.user.findUnique({
       where: {
@@ -53,24 +55,28 @@ export class UserController {
       },
     });
     if (!user) {
-      return reply.status(400).send({
-        message: "Usuário ou senha inválidos ⚠️⚠️⚠️!",
+      return res.status(400).send({
+        message: "Usuário ou senha inválidos!",
       });
     }
 
     const passwordMatch = await compare(password, user.password);
 
-    const token = generateToken(user.id);
-
     if (!passwordMatch) {
-      reply.status(400).send({
-        message: "Usuário ou senha inválidos ⚠️⚠️⚠️!",
+      return res.status(400).send({
+        message: "Usuário ou senha inválidos!",
       });
     }
 
-    request.headers.authorization = token;
+    const token = generateToken(user.id);
 
-    reply.status(200).send({ token, user });
+    res.cookie("auth", token, {
+      path: "/",
+      maxAge: 1 * 60 * 60 * 24, //1 dia
+      httpOnly: true,
+    });
+
+    res.status(200).send({ user });
   }
 
   async update(userToUpdate: UserToUpdate, userId: number) {

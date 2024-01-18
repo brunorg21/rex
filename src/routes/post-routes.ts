@@ -5,6 +5,7 @@ import {
   postToUpdateParamsSchema,
   postToUpdateSchema,
   postsSchema,
+  uniquePostSchema,
 } from "../schemas/postsSchema";
 import { auth } from "../middleware/auth";
 
@@ -41,7 +42,24 @@ export async function postRoutes(app: FastifyInstance) {
   );
 
   app.get(
-    "/post",
+    "/post/:id",
+    {
+      preHandler: auth,
+    },
+    async (request, reply) => {
+      const { id } = uniquePostSchema.parse(request.params);
+
+      const post = await postController.getUniquePost(Number(id));
+
+      if (!post) {
+        return reply.status(204).send({ message: "Nenhum post encontrado" });
+      }
+
+      return reply.status(200).send(post);
+    }
+  );
+  app.get(
+    "/allPosts",
     {
       preHandler: auth,
     },

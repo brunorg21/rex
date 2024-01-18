@@ -1,12 +1,8 @@
 import { FastifyInstance } from "fastify";
 import { UserController } from "../controllers/user-controller";
-import {
-  userSchema,
-  userSchemaToLogin,
-  userToUpdateSchema,
-} from "../schemas/userSchema";
+import { userToUpdateSchema } from "../schemas/userSchema";
 import { auth } from "../middleware/auth";
-import fastifyMultipart from "@fastify/multipart";
+import { prisma } from "../../prisma/prismaClient";
 
 const userController = new UserController();
 export async function userRoutes(app: FastifyInstance) {
@@ -21,7 +17,7 @@ export async function userRoutes(app: FastifyInstance) {
   app.put(
     "/user",
     {
-      preHandler: auth,
+      preHandler: [auth],
     },
     (req, reply) => {
       const userToUpdate = userToUpdateSchema.parse(req.body);
@@ -30,6 +26,42 @@ export async function userRoutes(app: FastifyInstance) {
       userController.update(userToUpdate, Number(user));
 
       return reply.status(201).send();
+    }
+  );
+
+  app.get(
+    "/me",
+    {
+      preHandler: auth,
+    },
+    async (request, reply) => {
+      const { user: userId } = request.headers;
+
+      const user = await prisma.user.findFirstOrThrow({
+        where: {
+          id: Number(userId),
+        },
+        select: {
+          avatar_url: true,
+          name: true,
+          email: true,
+          username: true,
+        },
+      });
+
+      return reply.status(200).send({ user });
+    }
+  );
+
+  app.get(
+    "/sign-out",
+    {
+      preHandler: auth,
+    },
+    async (request, reply) => {
+      reply.clearCookie("auth");
+
+      return reply.send({ message: "Usuário desconectado" });
     }
   );
 }
