@@ -103,11 +103,12 @@ export class PostController {
   }
 
   async deletePost(postId: number) {
-    await prisma.attachment.delete({
-      where: {
-        postId,
-      },
-    });
+    // await prisma.attachment.delete({
+    //   where: {
+    //     postId,
+    //   },
+    // });
+
     await prisma.post.delete({
       where: {
         id: postId,
