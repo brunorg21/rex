@@ -8,6 +8,7 @@ import {
   uniquePostSchema,
 } from "../schemas/postsSchema";
 import { auth } from "../middleware/auth";
+import { z } from "zod";
 
 const postController = new PostController();
 
@@ -35,9 +36,9 @@ export async function postRoutes(app: FastifyInstance) {
 
       const { user } = request.headers;
 
-      postController.create(post, Number(user));
+      await postController.create(post, Number(user));
 
-      reply.status(201);
+      reply.status(201).send();
     }
   );
 
@@ -64,9 +65,7 @@ export async function postRoutes(app: FastifyInstance) {
       preHandler: auth,
     },
     async (request, reply) => {
-      const { user } = request.headers;
-
-      const post = await postController.getAllPosts(Number(user));
+      const post = await postController.getAllPosts();
 
       if (!post) {
         return reply.status(204).send({ message: "Nenhum post encontrado" });
@@ -89,6 +88,20 @@ export async function postRoutes(app: FastifyInstance) {
       postController.update(postToUpdate, Number(postId));
 
       reply.send(201);
+    }
+  );
+
+  app.delete(
+    "/post/:postId",
+    {
+      preHandler: auth,
+    },
+    async (req, reply) => {
+      const { postId } = postToUpdateParamsSchema.parse(req.params);
+
+      await postController.deletePost(Number(postId));
+
+      reply.status(200).send();
     }
   );
 }

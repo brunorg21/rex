@@ -51,27 +51,24 @@ export class PostController {
 
     return postsWithLikesCount;
   }
-  async getAllPosts(userId: number) {
+  async getAllPosts() {
     const posts = await prisma.post.findMany({
-      where: {
-        userId: userId,
-      },
       orderBy: {
-        id: "asc",
+        id: "desc",
       },
       include: {
-        attachments: {},
+        attachments: {
+          select: {
+            name: true,
+            path: true,
+          },
+        },
         comments: {},
         likes: true,
       },
     });
 
-    const postsWithLikesCount = posts.map((post) => ({
-      ...post,
-      likesCount: post.likes.length,
-    }));
-
-    return postsWithLikesCount;
+    return posts;
   }
 
   async update(postToUpdate: PostToUpdate, postId: number) {
@@ -101,6 +98,19 @@ export class PostController {
             },
           },
         },
+      },
+    });
+  }
+
+  async deletePost(postId: number) {
+    await prisma.attachment.delete({
+      where: {
+        postId,
+      },
+    });
+    await prisma.post.delete({
+      where: {
+        id: postId,
       },
     });
   }

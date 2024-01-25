@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import path from "node:path";
+import path, { join } from "node:path";
 import { writeFileSync } from "fs";
 
 export async function saveImage(file: any) {
@@ -10,9 +10,11 @@ export async function saveImage(file: any) {
   const fileUploadName = `${fileBaseName}-${randomUUID()}-${extension}`;
 
   const destination = path.resolve(__dirname, "../../uploads", fileUploadName);
+  const relativePath = join("/uploads", fileUploadName);
+
   file.data.then((buffer: Buffer) => {
     writeFileSync(destination, buffer);
   });
 
-  return destination;
+  return relativePath.replace(/\\/g, "/");
 }

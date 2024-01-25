@@ -76,7 +76,7 @@ export class UserController {
       httpOnly: true,
     });
 
-    res.status(200).send({ user });
+    res.status(200).send({ token, user });
   }
 
   async update(userToUpdate: UserToUpdate, userId: number) {
