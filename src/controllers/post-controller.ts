@@ -65,10 +65,22 @@ export class PostController {
         },
         comments: {},
         likes: true,
+        user: {
+          select: {
+            avatar_url: true,
+            name: true,
+            username: true,
+          },
+        },
       },
     });
-
-    return posts;
+    const postsWithLikes = posts.map((item) => {
+      return {
+        ...item,
+        likesCount: item.likes.length,
+      };
+    });
+    return postsWithLikes;
   }
 
   async update(postToUpdate: PostToUpdate, postId: number) {

@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const postsSchema = z.object({
   title: z.string(),
-  content: z.string().max(280),
+  content: z.string().max(460),
   publishedAt: z.date().optional(),
   file: z
     .any()
