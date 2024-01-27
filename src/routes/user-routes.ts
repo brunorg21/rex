@@ -41,12 +41,6 @@ export async function userRoutes(app: FastifyInstance) {
         where: {
           id: Number(userId),
         },
-        select: {
-          avatar_url: true,
-          name: true,
-          email: true,
-          username: true,
-        },
       });
 
       return reply.status(200).send({ user });

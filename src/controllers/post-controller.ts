@@ -10,7 +10,14 @@ type PostToUpdate = z.infer<typeof postToUpdateSchema>;
 
 export class PostController {
   async create(post: IPost, userId: number) {
-    const { content, title, file } = post;
+    const { content, title, file, tags } = post;
+
+    const tagsParsed = JSON.parse(tags);
+    const tagsToCreate = tagsParsed.map((item: string) => {
+      return {
+        tagName: item,
+      };
+    });
 
     const destination = await saveImage(file);
 
@@ -23,6 +30,11 @@ export class PostController {
           create: {
             name: file.filename,
             path: destination,
+          },
+        },
+        tag: {
+          createMany: {
+            data: tagsToCreate,
           },
         },
       },
@@ -38,9 +50,14 @@ export class PostController {
         id: "asc",
       },
       include: {
-        attachments: {},
-        comments: {},
+        attachments: true,
+        comments: true,
         likes: true,
+        tag: {
+          select: {
+            tagName: true,
+          },
+        },
       },
     });
 
@@ -63,7 +80,12 @@ export class PostController {
             path: true,
           },
         },
-        comments: {},
+        comments: true,
+        tag: {
+          select: {
+            tagName: true,
+          },
+        },
         likes: true,
         user: {
           select: {
@@ -80,6 +102,7 @@ export class PostController {
         likesCount: item.likes.length,
       };
     });
+
     return postsWithLikes;
   }
 

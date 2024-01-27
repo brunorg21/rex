@@ -54,6 +54,7 @@ export class UserController {
         email,
       },
     });
+
     if (!user) {
       return res.status(400).send({
         message: "Usuário ou senha inválidos!",
