@@ -5,6 +5,7 @@ import { IPost } from "../models/post-model";
 import { z } from "zod";
 import { postToUpdateSchema } from "../schemas/postsSchema";
 import { updateImage } from "../utils/updateImage";
+import { deleteImage } from "../utils/deleteImage";
 
 type PostToUpdate = z.infer<typeof postToUpdateSchema>;
 
@@ -138,11 +139,15 @@ export class PostController {
   }
 
   async deletePost(postId: number) {
-    await prisma.attachment.delete({
+    const attachment = await prisma.attachment.delete({
       where: {
         postId,
       },
     });
+
+    if (attachment?.path) {
+      deleteImage(attachment?.path);
+    }
 
     await prisma.post.delete({
       where: {

@@ -1,10 +1,12 @@
 import path, { join } from "node:path";
 import { writeFileSync, existsSync } from "fs";
 import { randomUUID } from "node:crypto";
-import { unlinkSync } from "node:fs";
+import { deleteImage } from "./deleteImage";
 
 export async function updateImage(existingFilePath: any, newImage: any) {
-  if (!existsSync(existingFilePath)) {
+  const existingPath = path.join(__dirname, "../..", existingFilePath);
+
+  if (!existsSync(existingPath)) {
     const newExtension = path.extname(newImage.filename);
 
     const newBaseName = path.basename(newImage.filename, newExtension);
@@ -21,7 +23,9 @@ export async function updateImage(existingFilePath: any, newImage: any) {
     return relativePath.replace(/\\/g, "/");
   }
 
-  unlinkSync(existingFilePath);
+  console.log("true");
+
+  deleteImage(existingFilePath);
 
   const newExtension = path.extname(newImage.filename);
 
