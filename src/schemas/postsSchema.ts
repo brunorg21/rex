@@ -10,7 +10,7 @@ export const postsSchema = z.object({
     .refine((file) => !!file && file.mimetype.startsWith("image"), {
       message: "Somente arquivos de imagem são permitidos",
     }),
-  tags: z.any(),
+  tags: z.any().optional(),
 });
 
 export const uniquePostSchema = z.object({

@@ -4,5 +4,5 @@ export interface IPost {
   content: string;
   publishedAt?: Date;
   file?: any;
-  tags: string;
+  tags?: string;
 }

@@ -12,7 +12,7 @@ export class PostController {
   async create(post: IPost, userId: number) {
     const { content, title, file, tags } = post;
 
-    const tagsParsed = JSON.parse(tags);
+    const tagsParsed = JSON.parse(tags!);
     const tagsToCreate = tagsParsed.map((item: string) => {
       return {
         tagName: item,
@@ -138,11 +138,11 @@ export class PostController {
   }
 
   async deletePost(postId: number) {
-    // await prisma.attachment.delete({
-    //   where: {
-    //     postId,
-    //   },
-    // });
+    await prisma.attachment.delete({
+      where: {
+        postId,
+      },
+    });
 
     await prisma.post.delete({
       where: {

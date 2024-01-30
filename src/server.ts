@@ -6,7 +6,7 @@ import { postRoutes } from "./routes/post-routes";
 import { commentRoutes } from "./routes/comment-routes";
 import { emailRoute } from "./routes/email-route";
 import cookie, { FastifyCookieOptions } from "@fastify/cookie";
-import { fileRoutes } from "./routes/file-routes";
+
 import fastifyStatic from "@fastify/static";
 import { join } from "path";
 
@@ -35,7 +35,6 @@ app.register(commentRoutes);
 app.register(userRoutes);
 app.register(postRoutes);
 app.register(emailRoute);
-app.register(fileRoutes);
 
 app
   .listen({

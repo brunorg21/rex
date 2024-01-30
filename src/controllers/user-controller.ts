@@ -81,7 +81,7 @@ export class UserController {
   }
 
   async update(userToUpdate: UserToUpdate, userId: number) {
-    const { username, avatarUrl, email, password } = userToUpdate;
+    const { username, avatarUrl, email, password, bio } = userToUpdate;
 
     const user = await prisma.user.findUnique({
       where: {
@@ -91,7 +91,7 @@ export class UserController {
 
     const destination = await updateImage(user?.avatar_url, avatarUrl);
 
-    await prisma.user.update({
+    const updatedUser = await prisma.user.update({
       where: {
         id: userId,
       },
@@ -100,7 +100,10 @@ export class UserController {
         email,
         password,
         avatar_url: destination,
+        bio,
       },
     });
+
+    return updatedUser;
   }
 }
