@@ -9,9 +9,8 @@ import {
   userToUpdateSchema,
 } from "../schemas/userSchema";
 import { updateImage } from "../utils/updateImage";
-import { saveImage } from "../utils/saveImage";
+
 import { FastifyReply, FastifyRequest } from "fastify";
-import { parseCookies, setCookie } from "nookies";
 
 type UserToUpdate = z.infer<typeof userToUpdateSchema>;
 export class UserController {
@@ -81,7 +80,7 @@ export class UserController {
   }
 
   async update(userToUpdate: UserToUpdate, userId: number) {
-    const { username, avatarUrl, email, password, bio } = userToUpdate;
+    const { username, avatarUrl, email, password, bio, name } = userToUpdate;
 
     const user = await prisma.user.findUnique({
       where: {
@@ -101,6 +100,7 @@ export class UserController {
         password,
         avatar_url: destination,
         bio,
+        name,
       },
     });
 

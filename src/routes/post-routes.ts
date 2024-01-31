@@ -4,6 +4,7 @@ import { PostController } from "../controllers/post-controller";
 import {
   postToUpdateParamsSchema,
   postToUpdateSchema,
+  postsByUserSchema,
   postsSchema,
   uniquePostSchema,
 } from "../schemas/postsSchema";
@@ -51,6 +52,24 @@ export async function postRoutes(app: FastifyInstance) {
       const { id } = uniquePostSchema.parse(request.params);
 
       const post = await postController.getUniquePost(Number(id));
+
+      if (!post) {
+        return reply.status(204).send({ message: "Nenhum post encontrado" });
+      }
+
+      return reply.status(200).send(post);
+    }
+  );
+
+  app.get(
+    "/post/user/:id",
+    {
+      preHandler: auth,
+    },
+    async (request, reply) => {
+      const { userId } = postsByUserSchema.parse(request.params);
+
+      const post = await postController.getPostsByUser(Number(userId));
 
       if (!post) {
         return reply.status(204).send({ message: "Nenhum post encontrado" });

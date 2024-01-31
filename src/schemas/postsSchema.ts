@@ -16,6 +16,9 @@ export const postsSchema = z.object({
 export const uniquePostSchema = z.object({
   id: z.string(),
 });
+export const postsByUserSchema = z.object({
+  userId: z.string(),
+});
 
 export const postToUpdateSchema = z.object({
   title: z

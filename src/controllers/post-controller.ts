@@ -69,6 +69,33 @@ export class PostController {
 
     return postsWithLikesCount;
   }
+  async getPostsByUser(userId: number) {
+    const posts = await prisma.post.findMany({
+      where: {
+        userId,
+      },
+      orderBy: {
+        id: "asc",
+      },
+      include: {
+        attachments: true,
+        comments: true,
+        likes: true,
+        tag: {
+          select: {
+            tagName: true,
+          },
+        },
+      },
+    });
+
+    const postsWithLikesCount = posts.map((post) => ({
+      ...post,
+      likesCount: post.likes.length,
+    }));
+
+    return postsWithLikesCount;
+  }
   async getAllPosts() {
     const posts = await prisma.post.findMany({
       orderBy: {

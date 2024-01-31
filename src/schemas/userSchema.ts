@@ -23,4 +23,5 @@ export const userToUpdateSchema = z.object({
       message: "Somente arquivos de imagem são permitidos",
     }),
   bio: z.string().optional(),
+  name: z.string(),
 });
