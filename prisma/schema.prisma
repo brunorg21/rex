@@ -18,10 +18,10 @@ model User {
   avatar_url String?
   posts      Post[]
   comments   Comments[]
-  Likes      Likes[]
   name       String
   follower   Follower[]
   bio        String?
+  Like       Like[]
 }
 
 model Follower {
@@ -49,18 +49,17 @@ model Post {
   userId      Int
   attachments Attachment?
   comments    Comments[]
-  likes       Likes[]
   tag         Tag[]
+  likesCount  Int
+  like        Like[]
 }
 
-model Likes {
-  id         Int       @id @default(autoincrement())
-  user       User      @relation(fields: [userId], references: [id])
-  userId     Int
-  posts      Post?     @relation(fields: [postId], references: [id])
-  postId     Int?
-  comments   Comments? @relation(fields: [commentsId], references: [id])
-  commentsId Int?
+model Like {
+  id     Int  @id @default(autoincrement())
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId Int
 }
 
 model Attachment {
@@ -73,12 +72,12 @@ model Attachment {
 }
 
 model Comments {
-  id        Int      @id @default(autoincrement())
-  comment   String
-  postId    Int
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
-  post      Post     @relation(fields: [postId], references: [id])
-  createdAt DateTime @default(now())
-  Likes     Likes[]
+  id         Int      @id @default(autoincrement())
+  comment    String
+  postId     Int
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  post       Post     @relation(fields: [postId], references: [id])
+  createdAt  DateTime @default(now())
+  likesCount Int
 }

@@ -4,7 +4,7 @@ import { randomUUID } from "node:crypto";
 import { deleteImage } from "./deleteImage";
 
 export async function updateImage(existingFilePath: any, newImage: any) {
-  const existingPath = path.join(__dirname, "../..", existingFilePath);
+  const existingPath = path.join(__dirname, "../..", existingFilePath ?? "");
 
   if (!existsSync(existingPath)) {
     const newExtension = path.extname(newImage.filename);
@@ -22,8 +22,6 @@ export async function updateImage(existingFilePath: any, newImage: any) {
 
     return relativePath.replace(/\\/g, "/");
   }
-
-  console.log("true");
 
   deleteImage(existingFilePath);
 

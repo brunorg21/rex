@@ -2,6 +2,7 @@ import { FastifyInstance } from "fastify";
 import { fastifyMultipart } from "@fastify/multipart";
 import { PostController } from "../controllers/post-controller";
 import {
+  likeOnPostParamsSchema,
   postToUpdateParamsSchema,
   postToUpdateSchema,
   postsByUserSchema,
@@ -62,7 +63,7 @@ export async function postRoutes(app: FastifyInstance) {
   );
 
   app.get(
-    "/post/user/:id",
+    "/post/user/:userId",
     {
       preHandler: auth,
     },
@@ -107,6 +108,44 @@ export async function postRoutes(app: FastifyInstance) {
       postController.update(postToUpdate, Number(postId));
 
       reply.send(201);
+    }
+  );
+  app.post(
+    "/likeOnPost/:postId",
+    {
+      preHandler: auth,
+    },
+    async (req, reply) => {
+      const { postId } = postToUpdateParamsSchema.parse(req.params);
+
+      const { user } = req.headers;
+
+      const { like } = await postController.likeOnPost(
+        Number(postId),
+        Number(user)
+      );
+
+      reply.status(201).send({
+        postId: Number(postId),
+        like,
+      });
+    }
+  );
+  app.delete(
+    "/likeOnPost/:postId",
+    {
+      preHandler: auth,
+    },
+    async (req, reply) => {
+      const { postId } = likeOnPostParamsSchema.parse(req.params);
+
+      const { user } = req.headers;
+
+      await postController.deleteLikeOnPost(Number(postId), Number(user));
+
+      reply.status(201).send({
+        postId,
+      });
     }
   );
 

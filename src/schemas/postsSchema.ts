@@ -39,3 +39,6 @@ export const postToUpdateSchema = z.object({
 export const postToUpdateParamsSchema = z.object({
   postId: z.string(),
 });
+export const likeOnPostParamsSchema = z.object({
+  postId: z.string(),
+});

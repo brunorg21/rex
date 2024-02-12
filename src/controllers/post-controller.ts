@@ -27,6 +27,7 @@ export class PostController {
         content,
         title,
         userId,
+        likesCount: 0,
         attachments: {
           create: {
             name: file.filename,
@@ -53,7 +54,7 @@ export class PostController {
       include: {
         attachments: true,
         comments: true,
-        likes: true,
+
         tag: {
           select: {
             tagName: true,
@@ -62,12 +63,7 @@ export class PostController {
       },
     });
 
-    const postsWithLikesCount = posts.map((post) => ({
-      ...post,
-      likesCount: post.likes.length,
-    }));
-
-    return postsWithLikesCount;
+    return posts;
   }
   async getPostsByUser(userId: number) {
     const posts = await prisma.post.findMany({
@@ -80,21 +76,23 @@ export class PostController {
       include: {
         attachments: true,
         comments: true,
-        likes: true,
+
         tag: {
           select: {
             tagName: true,
           },
         },
+        user: {
+          select: {
+            avatar_url: true,
+            name: true,
+            username: true,
+          },
+        },
       },
     });
 
-    const postsWithLikesCount = posts.map((post) => ({
-      ...post,
-      likesCount: post.likes.length,
-    }));
-
-    return postsWithLikesCount;
+    return posts;
   }
   async getAllPosts() {
     const posts = await prisma.post.findMany({
@@ -114,7 +112,7 @@ export class PostController {
             tagName: true,
           },
         },
-        likes: true,
+
         user: {
           select: {
             avatar_url: true,
@@ -122,16 +120,11 @@ export class PostController {
             username: true,
           },
         },
+        like: true,
       },
     });
-    const postsWithLikes = posts.map((item) => {
-      return {
-        ...item,
-        likesCount: item.likes.length,
-      };
-    });
 
-    return postsWithLikes;
+    return posts;
   }
 
   async update(postToUpdate: PostToUpdate, postId: number) {
@@ -164,18 +157,97 @@ export class PostController {
       },
     });
   }
+  async likeOnPost(postId: number, userId: number) {
+    const actualPost = await prisma.post.findUnique({
+      where: {
+        id: postId,
+      },
+    });
+
+    if (!actualPost) {
+      throw new Error("Postagem não encontrada");
+    }
+
+    await prisma.post.update({
+      where: {
+        id: postId,
+      },
+      data: {
+        likesCount: actualPost?.likesCount + 1,
+      },
+    });
+
+    const like = await prisma.like.create({
+      data: {
+        postId,
+        userId,
+      },
+    });
+    return {
+      postId,
+      like,
+    };
+  }
+  async deleteLikeOnPost(postId: number, userId: number) {
+    const actualPost = await prisma.post.findUnique({
+      where: {
+        id: postId,
+      },
+    });
+
+    if (!actualPost) {
+      throw new Error("Postagem não encontrada");
+    }
+
+    await prisma.post.update({
+      where: {
+        id: postId,
+      },
+      data: {
+        likesCount: actualPost?.likesCount - 1,
+      },
+    });
+
+    const likeToDelete = await prisma.like.findMany({
+      where: {
+        postId,
+        userId,
+      },
+    });
+
+    await prisma.like.delete({
+      where: {
+        id: likeToDelete[0].id,
+      },
+    });
+
+    return postId;
+  }
 
   async deletePost(postId: number) {
-    const attachment = await prisma.attachment.delete({
+    const attachment = await prisma.attachment.findUnique({
       where: {
         postId,
       },
     });
 
-    if (attachment?.path) {
-      deleteImage(attachment?.path);
+    if (attachment) {
+      if (attachment?.path) {
+        deleteImage(attachment?.path);
+      }
+
+      await prisma.attachment.delete({
+        where: {
+          postId,
+        },
+      });
     }
 
+    await prisma.like.deleteMany({
+      where: {
+        postId,
+      },
+    });
     await prisma.post.delete({
       where: {
         id: postId,
