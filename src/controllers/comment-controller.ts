@@ -8,12 +8,30 @@ interface IComment {
 
 export class CommentController {
   async create({ comment, postId, userId }: IComment) {
-    await prisma.comments.create({
+    const createdComment = await prisma.comments.create({
       data: {
         comment,
         postId,
         userId,
+        likesCount: 0,
       },
     });
+
+    return createdComment;
+  }
+
+  async getAll(postId: number) {
+    const comments = await prisma.comments.findMany({
+      orderBy: {
+        id: "desc",
+      },
+      where: {
+        postId,
+      },
+    });
+
+    return {
+      comments,
+    };
   }
 }

@@ -141,10 +141,14 @@ export async function postRoutes(app: FastifyInstance) {
 
       const { user } = req.headers;
 
-      await postController.deleteLikeOnPost(Number(postId), Number(user));
+      const { likes } = await postController.deleteLikeOnPost(
+        Number(postId),
+        Number(user)
+      );
 
       reply.status(201).send({
         postId,
+        likes,
       });
     }
   );

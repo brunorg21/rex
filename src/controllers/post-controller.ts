@@ -54,10 +54,17 @@ export class PostController {
       include: {
         attachments: true,
         comments: true,
-
+        like: true,
         tag: {
           select: {
             tagName: true,
+          },
+        },
+        user: {
+          select: {
+            avatar_url: true,
+            name: true,
+            username: true,
           },
         },
       },
@@ -221,7 +228,12 @@ export class PostController {
       },
     });
 
-    return postId;
+    const likes = await prisma.like.findMany();
+
+    return {
+      postId,
+      likes,
+    };
   }
 
   async deletePost(postId: number) {

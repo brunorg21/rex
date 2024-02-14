@@ -23,9 +23,22 @@ export async function commentRoutes(app: FastifyInstance) {
         postId: Number(postId),
         userId: Number(user),
       };
-      commentController.create(commentToCreate);
+      const createdComment = commentController.create(commentToCreate);
 
-      reply.status(201).send();
+      reply.status(201).send(createdComment);
+    }
+  );
+  app.get(
+    "/comment/:postId",
+    {
+      preHandler: auth,
+    },
+    async (request, reply) => {
+      const { postId } = commentSchemaParams.parse(request.params);
+
+      const { comments } = await commentController.getAll(Number(postId));
+
+      reply.status(201).send(comments);
     }
   );
 }
