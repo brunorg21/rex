@@ -28,10 +28,54 @@ export class CommentController {
       where: {
         postId,
       },
+      include: {
+        user: true,
+      },
     });
 
     return {
       comments,
     };
+  }
+  async delete(commentId: number) {
+    const comment = await prisma.comments.findUnique({
+      where: {
+        id: commentId,
+      },
+    });
+
+    if (!comment) {
+      throw new Error("Comentário não existe");
+    }
+
+    const deletedComment = await prisma.comments.delete({
+      where: {
+        id: commentId,
+      },
+    });
+
+    return deletedComment;
+  }
+  async update(commentId: number, comment: string) {
+    const commentExists = await prisma.comments.findUnique({
+      where: {
+        id: commentId,
+      },
+    });
+
+    if (!commentExists) {
+      throw new Error("Comentário não existe");
+    }
+
+    const updatedComment = await prisma.comments.update({
+      where: {
+        id: commentExists.id,
+      },
+      data: {
+        comment,
+      },
+    });
+
+    return updatedComment;
   }
 }

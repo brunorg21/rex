@@ -7,3 +7,6 @@ export const commentsSchema = z.object({
 export const commentSchemaParams = z.object({
   postId: z.string(),
 });
+export const deleteCommentSchemaParams = z.object({
+  commentId: z.string(),
+});

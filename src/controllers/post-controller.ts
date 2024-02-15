@@ -260,6 +260,11 @@ export class PostController {
         postId,
       },
     });
+    await prisma.comments.deleteMany({
+      where: {
+        postId,
+      },
+    });
     await prisma.post.delete({
       where: {
         id: postId,
