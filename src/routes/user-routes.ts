@@ -1,6 +1,9 @@
 import { FastifyInstance } from "fastify";
 import { UserController } from "../controllers/user-controller";
-import { userToUpdateSchema } from "../schemas/userSchema";
+import {
+  getUniqueUserRequestParams,
+  userToUpdateSchema,
+} from "../schemas/userSchema";
 import { auth } from "../middleware/auth";
 import { prisma } from "../../prisma/prismaClient";
 import fastifyMultipart from "@fastify/multipart";
@@ -73,6 +76,38 @@ export async function userRoutes(app: FastifyInstance) {
       reply.clearCookie("auth");
 
       return reply.send({ message: "Usuário desconectado" });
+    }
+  );
+
+  app.get(
+    "/users",
+    {
+      preHandler: auth,
+    },
+    async (request, reply) => {
+      const users = await userController.getAll();
+
+      if (!users) {
+        return reply.status(404).send("Usuário não encontrado.");
+      }
+
+      return reply.status(200).send(users);
+    }
+  );
+  app.get(
+    "/user/:userId",
+    {
+      preHandler: auth,
+    },
+    async (request, reply) => {
+      const { userId } = getUniqueUserRequestParams.parse(request.params);
+      const user = await userController.getUniqueUser(Number(userId));
+
+      if (!user) {
+        return reply.status(404).send("Usuário não encontrado.");
+      }
+
+      return reply.status(200).send(user);
     }
   );
 }

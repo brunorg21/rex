@@ -106,4 +106,23 @@ export class UserController {
 
     return updatedUser;
   }
+
+  async getUniqueUser(userId: number) {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    return user;
+  }
+  async getAll() {
+    const users = await prisma.user.findMany({
+      orderBy: {
+        name: "desc",
+      },
+    });
+
+    return users;
+  }
 }

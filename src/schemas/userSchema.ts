@@ -25,3 +25,7 @@ export const userToUpdateSchema = z.object({
   bio: z.string().optional(),
   name: z.string(),
 });
+
+export const getUniqueUserRequestParams = z.object({
+  userId: z.string(),
+});
