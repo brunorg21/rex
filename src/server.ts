@@ -9,6 +9,7 @@ import cookie, { FastifyCookieOptions } from "@fastify/cookie";
 
 import fastifyStatic from "@fastify/static";
 import { join } from "path";
+import { followerRoute } from "./routes/follower-route";
 
 const app = fastify();
 
@@ -35,6 +36,7 @@ app.register(commentRoutes);
 app.register(userRoutes);
 app.register(postRoutes);
 app.register(emailRoute);
+app.register(followerRoute);
 
 app
   .listen({

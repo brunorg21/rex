@@ -27,7 +27,6 @@ model User {
 model Follower {
   id                  Int     @id @default(autoincrement())
   follower_username   String
-  follower_name       String
   follower_avatar_url String?
   User                User?   @relation(fields: [userId], references: [id])
   userId              Int?
