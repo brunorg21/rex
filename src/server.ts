@@ -9,7 +9,6 @@ import cookie, { FastifyCookieOptions } from "@fastify/cookie";
 import fastifyStatic from "@fastify/static";
 import { join } from "path";
 import { followerRoute } from "./routes/follower-route";
-import { env } from "./env";
 
 const app = fastify();
 
@@ -20,7 +19,7 @@ app.register(fastifyStatic, {
 
 app.register(cors, {
   credentials: true,
-  origin: true,
+  origin: "*",
   methods: ["PUT", "POST", "GET", "DELETE", "HEAD"],
 });
 
@@ -38,9 +37,11 @@ app.register(postRoutes);
 app.register(emailRoute);
 app.register(followerRoute);
 
+const PORT = Number(process.env.PORT);
+
 app
   .listen({
-    port: env.PORT,
+    port: PORT,
   })
   .then(() => {
     console.log("Server is running...");
