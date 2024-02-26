@@ -19,8 +19,8 @@ app.register(fastifyStatic, {
 
 app.register(cors, {
   credentials: true,
-  origin: "*",
-  methods: ["PUT", "POST", "GET", "DELETE", "HEAD"],
+  origin: "https://rex-front-olu57gyf0-brunorg21.vercel.app",
+  methods: ["PUT", "POST", "GET", "DELETE"],
 });
 
 app.register(cookie, {
@@ -38,7 +38,6 @@ app.register(emailRoute);
 app.register(followerRoute);
 
 const PORT = Number(process.env.PORT);
-const DATABASE = process.env.DATABASE_URL;
 
 app
   .listen({
@@ -46,5 +45,5 @@ app
     host: "0.0.0.0",
   })
   .then(() => {
-    console.log("Server is running..." + PORT + DATABASE);
+    console.log("Server is running..." + PORT);
   });
