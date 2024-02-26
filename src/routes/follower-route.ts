@@ -4,7 +4,7 @@ import { z } from "zod";
 import { FollowerController } from "../controllers/follower-controller";
 
 const createFollowerRequestSchema = z.object({
-  followerUsername: z.string(),
+  follower_username: z.string(),
   userId: z.number(),
 });
 const getFollowerRequestParamsSchema = z.object({

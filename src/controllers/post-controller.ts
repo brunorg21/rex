@@ -89,6 +89,7 @@ export class PostController {
             tagName: true,
           },
         },
+        like: true,
         user: {
           select: {
             avatar_url: true,

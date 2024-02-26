@@ -7,6 +7,8 @@ import {
 import { auth } from "../middleware/auth";
 import { prisma } from "../../prisma/prismaClient";
 import fastifyMultipart from "@fastify/multipart";
+import { z } from "zod";
+import { saveImage } from "../utils/saveImage";
 
 const userController = new UserController();
 export async function userRoutes(app: FastifyInstance) {
@@ -25,6 +27,17 @@ export async function userRoutes(app: FastifyInstance) {
   });
   app.post("/user", async (request, reply) => {
     await userController.create(request, reply);
+  });
+
+  app.post("/file", async (request, reply) => {
+    const schema = z.object({
+      file: z.any(),
+    });
+    const { file } = schema.parse(request.body);
+
+    await saveImage(file);
+
+    return file;
   });
 
   app.post("/user/login", async (request, reply) => {
