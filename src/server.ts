@@ -38,11 +38,13 @@ app.register(emailRoute);
 app.register(followerRoute);
 
 const PORT = Number(process.env.PORT);
+const DATABASE = Number(process.env.DATABASE_URL);
 
 app
   .listen({
     port: PORT,
+    host: "0.0.0.0",
   })
   .then(() => {
-    console.log("Server is running..." + PORT);
+    console.log("Server is running..." + PORT + DATABASE);
   });
