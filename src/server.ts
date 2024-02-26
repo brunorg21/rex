@@ -5,7 +5,6 @@ import { postRoutes } from "./routes/post-routes";
 import { commentRoutes } from "./routes/comment-routes";
 import { emailRoute } from "./routes/email-route";
 import cookie, { FastifyCookieOptions } from "@fastify/cookie";
-
 import fastifyStatic from "@fastify/static";
 import { join } from "path";
 import { followerRoute } from "./routes/follower-route";
@@ -25,10 +24,12 @@ app.register(cors, {
 
 app.register(cookie, {
   secret: "my-secret",
+
   setOptions: {
     path: "/",
     expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
     httpOnly: true,
+    domain: "rex-front-pied.vercel.app",
   },
 } as FastifyCookieOptions);
 app.register(commentRoutes);
@@ -42,7 +43,6 @@ const PORT = Number(process.env.PORT);
 app
   .listen({
     port: PORT,
-    host: "0.0.0.0",
   })
   .then(() => {
     console.log("Server is running..." + PORT);
