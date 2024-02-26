@@ -1,7 +1,6 @@
 import { fastify } from "fastify";
 import cors from "@fastify/cors";
 import { userRoutes } from "./routes/user-routes";
-import { prisma } from "../prisma/prismaClient";
 import { postRoutes } from "./routes/post-routes";
 import { commentRoutes } from "./routes/comment-routes";
 import { emailRoute } from "./routes/email-route";
