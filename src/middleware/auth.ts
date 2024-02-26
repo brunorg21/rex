@@ -4,6 +4,9 @@ import { verify } from "jsonwebtoken";
 export function auth(req: FastifyRequest, reply: FastifyReply, done: Function) {
   const authToken = req.cookies.auth;
 
+  console.log(req.cookies);
+  console.log(authToken);
+
   if (!authToken) {
     return reply.status(401).send({ message: "Usuário não autenticado" });
   }
