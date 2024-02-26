@@ -22,7 +22,7 @@ app.register(fastifyStatic, {
 app.register(cors, {
   credentials: true,
   origin: true,
-  methods: ["PUT", "POST", "GET", "DELETE", "OPTIONS", "PUTCH", "HEAD"],
+  methods: ["PUT", "POST", "GET", "DELETE", "HEAD"],
 });
 
 app.register(cookie, {
@@ -45,5 +45,4 @@ app
   })
   .then(() => {
     console.log("Server is running...");
-    prisma.$connect();
   });
