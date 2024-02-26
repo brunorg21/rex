@@ -10,7 +10,8 @@
     "dev": "tsx watch ./src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "docker": "docker compose up -d",
-    "build": "tsup src --out-dir build"
+    "build": "tsup src --out-dir build",
+    "migrate": "prisma migrate dev"
   },
   "keywords": [],
   "author": "",
