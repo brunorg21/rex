@@ -15,7 +15,7 @@ export async function commentRoutes(app: FastifyInstance) {
     {
       preHandler: auth,
     },
-    (request, reply) => {
+    async (request, reply) => {
       const { comment } = commentsSchema.parse(request.body);
 
       const { postId } = commentSchemaParams.parse(request.params);
@@ -27,7 +27,7 @@ export async function commentRoutes(app: FastifyInstance) {
         postId: Number(postId),
         userId: Number(user),
       };
-      const createdComment = commentController.create(commentToCreate);
+      const createdComment = await commentController.create(commentToCreate);
 
       reply.status(201).send(createdComment);
     }

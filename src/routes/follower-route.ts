@@ -1,5 +1,4 @@
 import { FastifyInstance } from "fastify";
-import nodemailer from "nodemailer";
 import { z } from "zod";
 import { FollowerController } from "../controllers/follower-controller";
 
@@ -9,6 +8,10 @@ const createFollowerRequestSchema = z.object({
 });
 const getFollowerRequestParamsSchema = z.object({
   userId: z.string(),
+});
+
+const deleteFollowerResquestBodySchema = z.object({
+  followerId: z.string(),
 });
 
 const followerController = new FollowerController();
@@ -46,6 +49,21 @@ export async function followerRoute(app: FastifyInstance) {
       }
 
       reply.status(200).send(followers);
+    }
+  );
+  app.delete(
+    "/follower/:followerId",
+
+    async (request, reply) => {
+      const { followerId } = deleteFollowerResquestBodySchema.parse(
+        request.params
+      );
+
+      await followerController.deleteFollower({
+        followerId: Number(followerId),
+      });
+
+      return reply.status(200).send();
     }
   );
 }

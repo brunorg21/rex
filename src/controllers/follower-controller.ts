@@ -8,6 +8,10 @@ interface GetFollowerData {
   userId: string;
 }
 
+interface DeleteFollowerRequest {
+  followerId: number;
+}
+
 export class FollowerController {
   async createFollower({ follower_username, userId }: CreateFollowerData) {
     const follower = await prisma.follower.create({
@@ -52,5 +56,19 @@ export class FollowerController {
       followingCount,
       followersRelated,
     };
+  }
+
+  async deleteFollower({ followerId }: DeleteFollowerRequest) {
+    const follower = await prisma.follower.findUnique({
+      where: {
+        id: followerId,
+      },
+    });
+
+    await prisma.follower.delete({
+      where: {
+        id: follower?.id,
+      },
+    });
   }
 }

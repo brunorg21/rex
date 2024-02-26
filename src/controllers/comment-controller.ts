@@ -13,7 +13,9 @@ export class CommentController {
         comment,
         postId,
         userId,
-        likesCount: 0,
+      },
+      include: {
+        user: true,
       },
     });
 
