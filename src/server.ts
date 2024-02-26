@@ -19,7 +19,7 @@ app.register(fastifyStatic, {
 
 app.register(cors, {
   credentials: true,
-  origin: "https://rex-front-olu57gyf0-brunorg21.vercel.app",
+  origin: true,
   methods: ["PUT", "POST", "GET", "DELETE"],
 });
 
