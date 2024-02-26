@@ -71,9 +71,10 @@ export class UserController {
     const token = generateToken(user.id);
 
     res.cookie("auth", token, {
+      path: "/",
       maxAge: 1 * 60 * 60 * 24, //1 dia
       httpOnly: true,
-      domain: "rex-front-pied.vercel.app",
+      domain: "https://rex-front-pied.vercel.app",
       secure: false,
       sameSite: "none",
     });
