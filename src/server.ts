@@ -38,7 +38,7 @@ app.register(emailRoute);
 app.register(followerRoute);
 
 const PORT = Number(process.env.PORT);
-const DATABASE = Number(process.env.DATABASE_URL);
+const DATABASE = process.env.DATABASE_URL;
 
 app
   .listen({
