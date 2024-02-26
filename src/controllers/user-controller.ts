@@ -70,7 +70,7 @@ export class UserController {
 
     const token = generateToken(user.id);
 
-    res.setCookie("auth", token, {
+    res.cookie("auth", token, {
       path: "/",
       maxAge: 1 * 60 * 60 * 24, //1 dia
       httpOnly: false,
