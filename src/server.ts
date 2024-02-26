@@ -22,17 +22,7 @@ app.register(cors, {
   methods: ["PUT", "POST", "GET", "DELETE"],
 });
 
-app.register(cookie, {
-  secret: "my-secret",
-
-  setOptions: {
-    path: "/",
-    expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-    httpOnly: true,
-    domain: "rex-front-pied.vercel.app",
-  },
-} as FastifyCookieOptions);
-app.register(commentRoutes);
+app.register(cookie), app.register(commentRoutes);
 app.register(userRoutes);
 app.register(postRoutes);
 app.register(emailRoute);
