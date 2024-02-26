@@ -22,7 +22,15 @@ app.register(cors, {
   methods: ["PUT", "POST", "GET", "DELETE"],
 });
 
-app.register(cookie), app.register(commentRoutes);
+app.register(cookie, {
+  parseOptions: {
+    domain: "https://rex-front-pied.vercel.app",
+    httpOnly: false,
+    sameSite: "none",
+    secure: true,
+  },
+}),
+  app.register(commentRoutes);
 app.register(userRoutes);
 app.register(postRoutes);
 app.register(emailRoute);
