@@ -10,6 +10,7 @@ import cookie, { FastifyCookieOptions } from "@fastify/cookie";
 import fastifyStatic from "@fastify/static";
 import { join } from "path";
 import { followerRoute } from "./routes/follower-route";
+import { env } from "./env";
 
 const app = fastify();
 
@@ -40,7 +41,7 @@ app.register(followerRoute);
 
 app
   .listen({
-    port: 3333,
+    port: env.PORT,
   })
   .then(() => {
     console.log("Server is running...");
