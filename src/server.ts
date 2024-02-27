@@ -17,24 +17,13 @@ app.register(fastifyStatic, {
 });
 
 app.register(cors, {
-  credentials: true,
-  origin: "https://rex-front-pied.vercel.app",
+  origin: "http://localhost:3333",
   allowedHeaders: ["content-type"],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
+  credentials: true,
 });
 
-app.register(cookie, {
-  secret: "5488943c-7a3b-4248-b7b6-8063baf9ef2d",
-  parseOptions: {
-    path: "/",
-    maxAge: 1 * 60 * 60 * 24, //1 dia
-    httpOnly: true,
-    domain: "rex-front-pied.vercel.app",
-    secure: true,
-    sameSite: "none",
-  },
-}),
-  app.register(commentRoutes);
+app.register(cookie), app.register(commentRoutes);
 app.register(userRoutes);
 app.register(postRoutes);
 app.register(emailRoute);
@@ -45,7 +34,6 @@ const PORT = Number(process.env.PORT);
 app
   .listen({
     port: PORT,
-    host: "0.0.0.0",
   })
   .then(() => {
     console.log("Server is running..." + PORT);
