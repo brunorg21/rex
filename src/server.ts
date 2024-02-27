@@ -24,7 +24,7 @@ app.register(cors, {
 });
 
 app.register(cookie, {
-  secret: "my-secret",
+  secret: "5488943c-7a3b-4248-b7b6-8063baf9ef2d",
   parseOptions: {
     path: "/",
     maxAge: 1 * 60 * 60 * 24, //1 dia
