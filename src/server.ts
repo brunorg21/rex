@@ -41,7 +41,7 @@ app.register(emailRoute);
 app.register(followerRoute);
 
 const PORT = Number(process.env.PORT);
-const ENV = Number(process.env.NODE_ENV);
+const ENV = process.env.NODE_ENV;
 
 app
   .listen({
