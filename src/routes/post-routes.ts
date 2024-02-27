@@ -17,7 +17,7 @@ const postController = new PostController();
 export async function postRoutes(app: FastifyInstance) {
   app.register(fastifyMultipart, {
     limits: {
-      fileSize: 1048576 * 25,
+      fileSize: 2 * 1024 * 1024,
     },
     attachFieldsToBody: "keyValues",
     onFile: (part: any) => {
