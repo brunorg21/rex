@@ -23,7 +23,16 @@ app.register(cors, {
   credentials: true,
 });
 
-app.register(cookie), app.register(commentRoutes);
+app.register(cookie, {
+  parseOptions: {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    path: "/",
+    maxAge: 1 * 60 * 60 * 24,
+  },
+}),
+  app.register(commentRoutes);
 app.register(userRoutes);
 app.register(postRoutes);
 app.register(emailRoute);
@@ -37,5 +46,5 @@ app
     host: "0.0.0.0",
   })
   .then(() => {
-    console.log("Server is running..." + PORT);
+    console.log("Server is running... " + PORT);
   });
