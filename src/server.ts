@@ -24,12 +24,13 @@ app.register(cors, {
 });
 
 app.register(cookie, {
-  secret: "my-secret",
+  secret: "5488943c-7a3b-4248-b7b6-8063baf9ef2d",
   parseOptions: {
-    httpOnly: process.env.PORT !== "development",
-    secure: process.env.PORT !== "development",
+    httpOnly: process.env.NODE_ENV !== "development",
+    secure: process.env.NODE_ENV !== "development",
     path: "/",
     maxAge: 1 * 60 * 60 * 24,
+    domain: "rex-front-pied.vercel.app",
   },
 }),
   app.register(commentRoutes);
