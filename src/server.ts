@@ -12,13 +12,13 @@ const app = fastify();
 
 app.register(fastifyStatic, {
   root: join(__dirname, "../uploads"),
-  prefix: "/uploads/",
+  prefix: "uploads/",
 });
 
 app.register(cors, {
   origin: "https://rex-front.onrender.com",
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Authorization", "Content-Type"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"],
+  allowedHeaders: ["Authorization", "Content-Type", "Origin"],
 });
 
 app.register(commentRoutes);
