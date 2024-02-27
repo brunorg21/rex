@@ -15,7 +15,9 @@ app.register(fastifyStatic, {
   prefix: "/uploads/",
 });
 
-app.register(cors);
+app.register(cors, {
+  origin: false,
+});
 
 app.register(commentRoutes);
 app.register(userRoutes);
