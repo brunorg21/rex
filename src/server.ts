@@ -17,6 +17,7 @@ app.register(fastifyStatic, {
 
 app.register(cors, {
   origin: false,
+  preflight: false,
 });
 
 app.register(commentRoutes);
