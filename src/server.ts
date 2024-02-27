@@ -19,7 +19,6 @@ app.register(cors, {
   origin: "https://rex-front.onrender.com",
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Authorization", "Content-Type"],
-  exposedHeaders: ["Content-Type"],
 });
 
 app.register(commentRoutes);
