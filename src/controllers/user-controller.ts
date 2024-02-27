@@ -76,7 +76,7 @@ export class UserController {
       maxAge: 1 * 60 * 60 * 24, //1 dia
       httpOnly: process.env.NODE_ENV !== "development",
       secure: process.env.NODE_ENV !== "development",
-      domain: "vercel.app",
+      domain: "rex-front.onrender.com",
     });
 
     res.status(200).send({ token, user });

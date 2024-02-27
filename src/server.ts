@@ -17,7 +17,7 @@ app.register(fastifyStatic, {
 });
 
 app.register(cors, {
-  origin: "https://rex-front-pied.vercel.app",
+  origin: "https://rex-front.onrender.com",
   allowedHeaders: ["content-type"],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
   credentials: true,
@@ -30,7 +30,7 @@ app.register(cookie, {
     secure: process.env.NODE_ENV !== "development",
     path: "/",
     maxAge: 1 * 60 * 60 * 24,
-    domain: "vercel.app",
+    domain: "rex-front.onrender.com",
     sameSite: "none",
   },
 }),
