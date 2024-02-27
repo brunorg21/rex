@@ -94,7 +94,7 @@ export class UserController {
       },
     });
 
-    res.status(200).send({ token, userToSend });
+    res.status(200).send({ token, user: userToSend });
   }
 
   async update(userToUpdate: UserToUpdate, userId: number) {
