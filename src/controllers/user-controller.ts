@@ -74,7 +74,6 @@ export class UserController {
       path: "/",
       maxAge: 1 * 60 * 60 * 24, //1 dia
       httpOnly: true,
-      domain: "https://rex-front-pied.vercel.app",
       secure: false,
       sameSite: "none",
     });
