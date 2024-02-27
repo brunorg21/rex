@@ -72,6 +72,8 @@ export class UserController {
 
     const token = generateToken(user.id);
 
+    req.headers.auth = token;
+
     res.status(200).send({ token, user });
   }
 
