@@ -74,8 +74,6 @@ export class UserController {
       path: "/",
       maxAge: 1 * 60 * 60 * 24, //1 dia
       httpOnly: true,
-      secure: false,
-      sameSite: "none",
     });
 
     res.status(200).send({ token, user });
