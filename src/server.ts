@@ -30,7 +30,7 @@ app.register(cookie, {
     secure: process.env.NODE_ENV !== "development",
     path: "/",
     maxAge: 1 * 60 * 60 * 24,
-    domain: "rex-front-pied.vercel.app",
+    domain: "vercel.app",
     sameSite: "none",
   },
 }),
