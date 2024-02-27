@@ -38,6 +38,13 @@ export class UserController {
         username,
         name,
       },
+      select: {
+        name: true,
+        avatar_url: true,
+        email: true,
+        username: true,
+        id: true,
+      },
     });
 
     const token = generateToken(user.id);
@@ -74,7 +81,20 @@ export class UserController {
 
     req.headers.auth = token;
 
-    res.status(200).send({ token, user });
+    const userToSend = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+      select: {
+        email: true,
+        name: true,
+        avatar_url: true,
+        username: true,
+        id: true,
+      },
+    });
+
+    res.status(200).send({ token, userToSend });
   }
 
   async update(userToUpdate: UserToUpdate, userId: number) {
@@ -100,6 +120,13 @@ export class UserController {
         bio,
         name,
       },
+      select: {
+        email: true,
+        name: true,
+        avatar_url: true,
+        username: true,
+        id: true,
+      },
     });
 
     return updatedUser;
@@ -110,6 +137,13 @@ export class UserController {
       where: {
         id: userId,
       },
+      select: {
+        email: true,
+        name: true,
+        avatar_url: true,
+        username: true,
+        id: true,
+      },
     });
 
     return user;
@@ -118,6 +152,13 @@ export class UserController {
     const users = await prisma.user.findMany({
       orderBy: {
         name: "desc",
+      },
+      select: {
+        email: true,
+        name: true,
+        avatar_url: true,
+        username: true,
+        id: true,
       },
     });
 
