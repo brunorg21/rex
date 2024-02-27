@@ -21,7 +21,17 @@ app.register(cors, {
   origin: "https://rex-front-pied.vercel.app",
 });
 
-app.register(cookie), app.register(commentRoutes);
+app.register(cookie, {
+  parseOptions: {
+    path: "/",
+    maxAge: 1 * 60 * 60 * 24, //1 dia
+    httpOnly: true,
+    domain: "https://rex-front-pied.vercel.app",
+    secure: false,
+    sameSite: "none",
+  },
+}),
+  app.register(commentRoutes);
 app.register(userRoutes);
 app.register(postRoutes);
 app.register(emailRoute);
