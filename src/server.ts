@@ -12,7 +12,7 @@ const app = fastify();
 
 app.register(fastifyStatic, {
   root: join(__dirname, "../uploads"),
-  prefix: "/uploads/",
+  prefix: "uploads/",
 });
 
 app.register(cors, {
