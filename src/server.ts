@@ -19,7 +19,6 @@ app.register(cors, {
   origin: "https://rex-front.onrender.com",
   allowedHeaders: ["content-type"],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
-  credentials: true,
 });
 
 app.register(commentRoutes);
@@ -37,5 +36,5 @@ app
     host: process.env.PORT !== "development" ? "0.0.0.0" : "",
   })
   .then(() => {
-    console.log("Server is running... " + PORT + " " + ENV);
+    console.log("Server is running... ");
   });
