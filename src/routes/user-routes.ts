@@ -86,8 +86,6 @@ export async function userRoutes(app: FastifyInstance) {
       preHandler: auth,
     },
     async (request, reply) => {
-      reply.clearCookie("auth");
-
       return reply.send({ message: "Usuário desconectado" });
     }
   );
