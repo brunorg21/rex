@@ -30,6 +30,7 @@ app.register(cookie, {
     secure: process.env.PORT !== "development",
     path: "/",
     maxAge: 1 * 60 * 60 * 24,
+    domain: "rex-front-kl8ijm2s9-brunorg21.vercel.app",
   },
 }),
   app.register(commentRoutes);

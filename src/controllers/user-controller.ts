@@ -75,6 +75,7 @@ export class UserController {
       maxAge: 1 * 60 * 60 * 24, //1 dia
       httpOnly: process.env.PORT !== "development",
       secure: process.env.PORT !== "development",
+      domain: "rex-front-kl8ijm2s9-brunorg21.vercel.app",
     });
 
     res.status(200).send({ token, user });
