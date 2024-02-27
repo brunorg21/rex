@@ -24,10 +24,10 @@ app.register(cors, {
 });
 
 app.register(cookie, {
+  secret: "my-secret",
   parseOptions: {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
+    httpOnly: process.env.PORT !== "development",
+    secure: process.env.PORT !== "development",
     path: "/",
     maxAge: 1 * 60 * 60 * 24,
   },
@@ -43,7 +43,7 @@ const PORT = Number(process.env.PORT);
 app
   .listen({
     port: PORT,
-    host: "0.0.0.0",
+    host: process.env.PORT !== "development" ? "0.0.0.0" : "",
   })
   .then(() => {
     console.log("Server is running... " + PORT);

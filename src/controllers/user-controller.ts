@@ -73,10 +73,8 @@ export class UserController {
     res.cookie("auth", token, {
       path: "/",
       maxAge: 1 * 60 * 60 * 24, //1 dia
-      httpOnly: true,
-      domain: "rex-front-pied.vercel.app",
-      secure: true,
-      sameSite: "none",
+      httpOnly: process.env.PORT !== "development",
+      secure: process.env.PORT !== "development",
     });
 
     res.status(200).send({ token, user });
