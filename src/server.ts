@@ -31,6 +31,7 @@ app.register(cookie, {
     path: "/",
     maxAge: 1 * 60 * 60 * 24,
     domain: "rex-front-pied.vercel.app",
+    sameSite: "strict",
   },
 }),
   app.register(commentRoutes);
@@ -40,6 +41,7 @@ app.register(emailRoute);
 app.register(followerRoute);
 
 const PORT = Number(process.env.PORT);
+const ENV = Number(process.env.NODE_ENV);
 
 app
   .listen({
@@ -47,5 +49,5 @@ app
     host: process.env.PORT !== "development" ? "0.0.0.0" : "",
   })
   .then(() => {
-    console.log("Server is running... " + PORT);
+    console.log("Server is running... " + PORT + " " + ENV);
   });

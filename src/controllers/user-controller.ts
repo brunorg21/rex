@@ -71,6 +71,7 @@ export class UserController {
     const token = generateToken(user.id);
 
     res.cookie("auth", token, {
+      sameSite: "strict",
       path: "/",
       maxAge: 1 * 60 * 60 * 24, //1 dia
       httpOnly: process.env.NODE_ENV !== "development",
