@@ -29,7 +29,7 @@ app.register(cookie, {
     path: "/",
     maxAge: 1 * 60 * 60 * 24, //1 dia
     httpOnly: true,
-    domain: "https://rex-front-pied.vercel.app",
+    domain: "rex-front-pied.vercel.app",
     secure: true,
     sameSite: "none",
   },
