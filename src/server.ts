@@ -19,6 +19,8 @@ app.register(fastifyStatic, {
 app.register(cors, {
   credentials: true,
   origin: "https://rex-front-pied.vercel.app",
+  allowedHeaders: ["content-type"],
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
 });
 
 app.register(cookie, {
