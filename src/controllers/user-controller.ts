@@ -42,6 +42,8 @@ export class UserController {
 
     const token = generateToken(user.id);
 
+    request.headers.auth = token;
+
     return reply.status(201).send({ token, user });
   }
 
@@ -69,15 +71,6 @@ export class UserController {
     }
 
     const token = generateToken(user.id);
-
-    res.cookie("auth", token, {
-      sameSite: "none",
-      path: "/",
-      maxAge: 1 * 60 * 60 * 24, //1 dia
-      httpOnly: process.env.NODE_ENV !== "development",
-      secure: process.env.NODE_ENV !== "development",
-      domain: "rex-front.onrender.com",
-    });
 
     res.status(200).send({ token, user });
   }

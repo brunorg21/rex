@@ -4,7 +4,6 @@ import { userRoutes } from "./routes/user-routes";
 import { postRoutes } from "./routes/post-routes";
 import { commentRoutes } from "./routes/comment-routes";
 import { emailRoute } from "./routes/email-route";
-import cookie, { FastifyCookieOptions } from "@fastify/cookie";
 import fastifyStatic from "@fastify/static";
 import { join } from "path";
 import { followerRoute } from "./routes/follower-route";
@@ -23,18 +22,7 @@ app.register(cors, {
   credentials: true,
 });
 
-app.register(cookie, {
-  secret: "5488943c-7a3b-4248-b7b6-8063baf9ef2d",
-  parseOptions: {
-    httpOnly: process.env.NODE_ENV !== "development",
-    secure: process.env.NODE_ENV !== "development",
-    path: "/",
-    maxAge: 1 * 60 * 60 * 24,
-    domain: "rex-front.onrender.com",
-    sameSite: "none",
-  },
-}),
-  app.register(commentRoutes);
+app.register(commentRoutes);
 app.register(userRoutes);
 app.register(postRoutes);
 app.register(emailRoute);
