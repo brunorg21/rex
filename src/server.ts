@@ -17,8 +17,8 @@ app.register(fastifyStatic, {
 
 app.register(cors, {
   origin: "https://rex-front.onrender.com",
-  allowedHeaders: ["content-type"],
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Authorization", "Content-Type"],
 });
 
 app.register(commentRoutes);
