@@ -17,7 +17,7 @@ app.register(fastifyStatic, {
 });
 
 app.register(cors, {
-  origin: "http://localhost:3333",
+  origin: "https://rex-front-pied.vercel.app",
   allowedHeaders: ["content-type"],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
   credentials: true,
@@ -34,6 +34,7 @@ const PORT = Number(process.env.PORT);
 app
   .listen({
     port: PORT,
+    host: "0.0.0.0",
   })
   .then(() => {
     console.log("Server is running..." + PORT);
