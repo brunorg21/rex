@@ -30,8 +30,8 @@ app.register(cookie, {
     secure: process.env.NODE_ENV !== "development",
     path: "/",
     maxAge: 1 * 60 * 60 * 24,
-    domain: ".onrender.com",
-    sameSite: "strict",
+    domain: "rex-front-pied.vercel.app",
+    sameSite: "none",
   },
 }),
   app.register(commentRoutes);

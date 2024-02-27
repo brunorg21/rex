@@ -71,12 +71,12 @@ export class UserController {
     const token = generateToken(user.id);
 
     res.cookie("auth", token, {
-      sameSite: "strict",
+      sameSite: "none",
       path: "/",
       maxAge: 1 * 60 * 60 * 24, //1 dia
       httpOnly: process.env.NODE_ENV !== "development",
       secure: process.env.NODE_ENV !== "development",
-      domain: ".onrender.com",
+      domain: "rex-front-pied.vercel.app",
     });
 
     res.status(200).send({ token, user });
