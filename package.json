@@ -11,7 +11,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "docker": "docker compose up -d",
     "build": "tsup src --out-dir build",
-    "migrate": "npx prisma migrate deploy"
+    "migrate": "npx prisma migrate dev"
   },
   "keywords": [],
   "author": "",
