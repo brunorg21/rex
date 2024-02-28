@@ -11,9 +11,10 @@ import { followerRoute } from "./routes/follower-route";
 const app = fastify();
 
 app.register(cors, {
-  origin: "*",
+  origin: "https://rex-front.onrender.com",
   methods: ["POST", "PUT", "GET", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
 });
 
 app.register(fastifyStatic, {
