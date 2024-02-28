@@ -26,12 +26,7 @@ export class PostController {
         title,
         userId,
         likesCount: 0,
-        attachments: {
-          create: {
-            name: file.filename,
-            path: "",
-          },
-        },
+
         tag: {
           createMany: {
             data: tagsToCreate,
