@@ -17,12 +17,6 @@ app.register(cors, {
   methods: ["POST", "DELETE", "PUT", "GET", "OPTIONS", "HEAD", "PATCH"],
 });
 
-app.addHook("onRequest", (request, reply, done) => {
-  const origin = request.headers.origin;
-  console.log("Origem da solicitação:", origin);
-  done();
-});
-
 app.register(fastifyStatic, {
   root: join(__dirname, "../uploads"),
   prefix: "/uploads/",
