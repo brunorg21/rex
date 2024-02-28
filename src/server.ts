@@ -10,9 +10,19 @@ import { followerRoute } from "./routes/follower-route";
 import fastifyMultipart from "@fastify/multipart";
 
 const app = fastify();
+const allowedOrigins = [
+  "https://rex-front.onrender.com",
+  "http://localhost:3333",
+];
 
 app.register(cors, {
-  origin: ["https://rex-front.onrender.com"],
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"), false);
+    }
+  },
   methods: ["POST", "PUT", "GET", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 });
