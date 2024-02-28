@@ -15,19 +15,6 @@ import { z } from "zod";
 const postController = new PostController();
 
 export async function postRoutes(app: FastifyInstance) {
-  app.register(fastifyMultipart, {
-    limits: {
-      fileSize: 2 * 1024 * 1024,
-    },
-    attachFieldsToBody: "keyValues",
-    onFile: (part: any) => {
-      part.value = {
-        filename: part.filename,
-        mimetype: part.mimetype,
-        data: part.toBuffer(),
-      };
-    },
-  });
   app.post(
     "/post",
     {

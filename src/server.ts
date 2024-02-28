@@ -7,19 +7,30 @@ import { emailRoute } from "./routes/email-route";
 import fastifyStatic from "@fastify/static";
 import { join } from "path";
 import { followerRoute } from "./routes/follower-route";
+import fastifyMultipart from "@fastify/multipart";
 
 const app = fastify();
 
 app.register(cors, {
-  origin: ["https://rex-front.onrender.com", "http://localhost:3333"],
+  origin: ["https://rex-front.onrender.com"],
   methods: ["POST", "PUT", "GET", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
 });
 
 app.register(fastifyStatic, {
   root: join(__dirname, "../uploads"),
   prefix: "/uploads/",
+});
+
+app.register(fastifyMultipart, {
+  attachFieldsToBody: "keyValues",
+  onFile: (part: any) => {
+    part.value = {
+      filename: part.filename,
+      mimetype: part.mimetype,
+      data: part.toBuffer(),
+    };
+  },
 });
 
 app.register(commentRoutes);
