@@ -11,11 +11,7 @@ import fastifyMultipart from "@fastify/multipart";
 
 const app = fastify();
 
-app.register(cors, {
-  origin: "*",
-  methods: ["POST", "PUT", "GET", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-});
+app.register(cors);
 
 app.register(fastifyStatic, {
   root: join(__dirname, "../uploads"),
