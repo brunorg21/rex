@@ -13,7 +13,7 @@ const app = fastify();
 
 app.register(cors, {
   origin: "https://rex-front.onrender.com",
-  allowedHeaders: ["Content-Type", "Authorization", "Origin"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   methods: ["POST", "DELETE", "PUT", "GET", "OPTIONS", "HEAD", "PATCH"],
 });
 
