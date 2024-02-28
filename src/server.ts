@@ -10,15 +10,15 @@ import { followerRoute } from "./routes/follower-route";
 
 const app = fastify();
 
+app.register(cors, {
+  origin: "*",
+  methods: ["POST", "PUT", "GET", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+});
+
 app.register(fastifyStatic, {
   root: join(__dirname, "../uploads"),
   prefix: "/uploads/",
-});
-
-app.register(cors, {
-  origin: "https://rex-front.onrender.com ",
-  methods: ["POST", "PUT", "GET", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "Origin"],
 });
 
 app.register(commentRoutes);
