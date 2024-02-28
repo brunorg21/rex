@@ -1,4 +1,4 @@
-import { fastify } from "fastify";
+import { FastifyReply, FastifyRequest, fastify } from "fastify";
 import cors from "@fastify/cors";
 import { userRoutes } from "./routes/user-routes";
 import { postRoutes } from "./routes/post-routes";
@@ -13,8 +13,14 @@ const app = fastify();
 
 app.register(cors, {
   origin: "https://rex-front.onrender.com",
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: ["Content-Type", "Authorization", "Origin"],
   methods: ["POST", "DELETE", "PUT", "GET", "OPTIONS", "HEAD", "PATCH"],
+});
+
+app.addHook("onRequest", (request, reply, done) => {
+  const origin = request.headers.origin;
+  console.log("Origem da solicitação:", origin);
+  done();
 });
 
 app.register(fastifyStatic, {
