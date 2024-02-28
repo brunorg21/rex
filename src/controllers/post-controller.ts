@@ -20,13 +20,20 @@ export class PostController {
       };
     });
 
+    const destination = await saveImage(file);
+
     await prisma.post.create({
       data: {
         content,
         title,
         userId,
         likesCount: 0,
-
+        attachments: {
+          create: {
+            name: file.filename,
+            path: destination,
+          },
+        },
         tag: {
           createMany: {
             data: tagsToCreate,
