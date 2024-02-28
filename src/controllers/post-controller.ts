@@ -20,8 +20,6 @@ export class PostController {
       };
     });
 
-    const destination = await saveImage(file);
-
     await prisma.post.create({
       data: {
         content,
@@ -31,7 +29,7 @@ export class PostController {
         attachments: {
           create: {
             name: file.filename,
-            path: destination,
+            path: "",
           },
         },
         tag: {
