@@ -11,13 +11,13 @@ export class PostController {
   async create(post: IPost, userId: number) {
     const { content, title, file, tags } = post;
 
-    const tagsParsed = JSON.parse(tags!);
+    // const tagsParsed = JSON.parse(tags!);
 
-    const tagsToCreate = tagsParsed.map((item: string) => {
-      return {
-        tagName: item,
-      };
-    });
+    // const tagsToCreate = tagsParsed.map((item: string) => {
+    //   return {
+    //     tagName: item,
+    //   };
+    // });
 
     const buffer: Buffer = await file.data;
 
@@ -30,11 +30,11 @@ export class PostController {
         userId,
         likesCount: 0,
         imageId,
-        tag: {
-          createMany: {
-            data: tagsToCreate,
-          },
-        },
+        // tag: {
+        //   createMany: {
+        //     data: tagsToCreate,
+        //   },
+        // },
       },
     });
   }

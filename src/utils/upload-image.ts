@@ -24,7 +24,9 @@ export async function uploadImage(file: any, buffer: Buffer) {
     });
 
     return response.data.id;
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export async function deleteImage(fileId: string) {
