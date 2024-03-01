@@ -12,10 +12,7 @@ import fastifyMultipart from "@fastify/multipart";
 const app = fastify();
 
 app.register(cors, {
-  origin:
-    process.env.NODE_ENV !== "development"
-      ? "https://rex-front.onrender.com"
-      : "http://localhost:3333",
+  origin: "https://rex-front.onrender.com",
   allowedHeaders: [
     "Content-Type",
     "Authorization",
@@ -35,7 +32,7 @@ const PORT = Number(process.env.PORT);
 app
   .listen({
     port: PORT,
-    host: process.env.NODE_ENV !== "development" ? "0.0.0.0" : "",
+    host: "0.0.0.0",
   })
   .then(() => {
     console.log("Server is running... " + PORT);
