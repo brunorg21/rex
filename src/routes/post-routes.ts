@@ -2,6 +2,7 @@ import { FastifyInstance } from "fastify";
 import { fastifyMultipart } from "@fastify/multipart";
 import { PostController } from "../controllers/post-controller";
 import {
+  deletePostParamsSchema,
   likeOnPostParamsSchema,
   postToUpdateParamsSchema,
   postToUpdateSchema,
@@ -10,11 +11,20 @@ import {
   uniquePostSchema,
 } from "../schemas/postsSchema";
 import { auth } from "../middleware/auth";
-import { z } from "zod";
 
 const postController = new PostController();
 
 export async function postRoutes(app: FastifyInstance) {
+  app.register(fastifyMultipart, {
+    attachFieldsToBody: "keyValues",
+    onFile: (part: any) => {
+      part.value = {
+        filename: part.filename,
+        mimetype: part.mimetype,
+        data: part.toBuffer(),
+      };
+    },
+  });
   app.post(
     "/post",
     {
@@ -82,21 +92,6 @@ export async function postRoutes(app: FastifyInstance) {
     }
   );
 
-  app.put(
-    "/post/:postId",
-    {
-      preHandler: auth,
-    },
-    async (req, reply) => {
-      const postToUpdate = postToUpdateSchema.parse(req.body);
-
-      const { postId } = postToUpdateParamsSchema.parse(req.params);
-
-      postController.update(postToUpdate, Number(postId));
-
-      reply.send(201);
-    }
-  );
   app.post(
     "/likeOnPost/:postId",
     {
@@ -141,14 +136,14 @@ export async function postRoutes(app: FastifyInstance) {
   );
 
   app.delete(
-    "/post/:postId",
+    "/post/:postId/:fileId",
     {
       preHandler: auth,
     },
     async (req, reply) => {
-      const { postId } = postToUpdateParamsSchema.parse(req.params);
+      const { postId, fileId } = deletePostParamsSchema.parse(req.params);
 
-      await postController.deletePost(Number(postId));
+      await postController.deletePost(Number(postId), fileId);
 
       reply.status(200).send();
     }

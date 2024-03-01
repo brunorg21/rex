@@ -1,11 +1,9 @@
 import { prisma } from "../../prisma/prismaClient";
 
-import { saveImage } from "../utils/saveImage";
 import { IPost } from "../models/post-model";
 import { z } from "zod";
 import { postToUpdateSchema } from "../schemas/postsSchema";
-import { updateImage } from "../utils/updateImage";
-import { deleteImage } from "../utils/deleteImage";
+import { deleteImage, uploadImage } from "../utils/upload-image";
 
 type PostToUpdate = z.infer<typeof postToUpdateSchema>;
 
@@ -14,13 +12,16 @@ export class PostController {
     const { content, title, file, tags } = post;
 
     const tagsParsed = JSON.parse(tags!);
+
     const tagsToCreate = tagsParsed.map((item: string) => {
       return {
         tagName: item,
       };
     });
 
-    const destination = await saveImage(file);
+    const buffer: Buffer = await file.data;
+
+    const imageId = await uploadImage(file, buffer);
 
     await prisma.post.create({
       data: {
@@ -28,12 +29,7 @@ export class PostController {
         title,
         userId,
         likesCount: 0,
-        attachments: {
-          create: {
-            name: file.filename,
-            path: destination,
-          },
-        },
+        imageId,
         tag: {
           createMany: {
             data: tagsToCreate,
@@ -52,7 +48,6 @@ export class PostController {
         id: "asc",
       },
       include: {
-        attachments: true,
         comments: true,
         like: true,
         tag: {
@@ -62,7 +57,7 @@ export class PostController {
         },
         user: {
           select: {
-            avatar_url: true,
+            avatarUrlId: true,
             name: true,
             username: true,
           },
@@ -81,9 +76,7 @@ export class PostController {
         id: "asc",
       },
       include: {
-        attachments: true,
         comments: true,
-
         tag: {
           select: {
             tagName: true,
@@ -92,7 +85,7 @@ export class PostController {
         like: true,
         user: {
           select: {
-            avatar_url: true,
+            avatarUrlId: true,
             name: true,
             username: true,
           },
@@ -108,12 +101,6 @@ export class PostController {
         id: "desc",
       },
       include: {
-        attachments: {
-          select: {
-            name: true,
-            path: true,
-          },
-        },
         comments: true,
         tag: {
           select: {
@@ -123,7 +110,7 @@ export class PostController {
 
         user: {
           select: {
-            avatar_url: true,
+            avatarUrlId: true,
             name: true,
             username: true,
           },
@@ -135,36 +122,6 @@ export class PostController {
     return posts;
   }
 
-  async update(postToUpdate: PostToUpdate, postId: number) {
-    const { content, file, title } = postToUpdate;
-
-    const attachment = await prisma.attachment.findUnique({
-      where: {
-        postId,
-      },
-    });
-
-    const path = await updateImage(attachment?.path, file);
-
-    await prisma.post.update({
-      where: {
-        id: postId,
-      },
-      data: {
-        title,
-        content,
-
-        attachments: {
-          update: {
-            data: {
-              name: file.filename,
-              path,
-            },
-          },
-        },
-      },
-    });
-  }
   async likeOnPost(postId: number, userId: number) {
     const actualPost = await prisma.post.findUnique({
       where: {
@@ -237,24 +194,8 @@ export class PostController {
     };
   }
 
-  async deletePost(postId: number) {
-    const attachment = await prisma.attachment.findUnique({
-      where: {
-        postId,
-      },
-    });
-
-    if (attachment) {
-      if (attachment?.path) {
-        deleteImage(attachment?.path);
-      }
-
-      await prisma.attachment.delete({
-        where: {
-          postId,
-        },
-      });
-    }
+  async deletePost(postId: number, fileId: string) {
+    await deleteImage(fileId);
 
     await prisma.like.deleteMany({
       where: {

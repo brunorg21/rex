@@ -18,7 +18,6 @@ export class FollowerController {
       data: {
         follower_username,
         userId,
-        follower_avatar_url: null,
       },
     });
 

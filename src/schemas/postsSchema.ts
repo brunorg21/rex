@@ -4,8 +4,13 @@ export const postsSchema = z.object({
   title: z.string(),
   content: z.string().max(460),
   publishedAt: z.date().optional(),
-
-  tags: z.any().optional(),
+  file: z
+    .any()
+    .optional()
+    .refine((file) => !!file && file.mimetype.startsWith("image"), {
+      message: "Somente arquivos de imagem são permitidos",
+    }),
+  tags: z.any(),
 });
 
 export const uniquePostSchema = z.object({
@@ -36,4 +41,8 @@ export const postToUpdateParamsSchema = z.object({
 });
 export const likeOnPostParamsSchema = z.object({
   postId: z.string(),
+});
+export const deletePostParamsSchema = z.object({
+  postId: z.string(),
+  fileId: z.string(),
 });

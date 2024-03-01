@@ -1,5 +1,5 @@
 import { prisma } from "../../prisma/prismaClient";
-import { IUser, IUserToAuth } from "../models/user-model";
+
 import { compare, hash } from "bcryptjs";
 import { generateToken } from "../utils/generateToken";
 import { z } from "zod";
@@ -8,9 +8,9 @@ import {
   userSchemaToLogin,
   userToUpdateSchema,
 } from "../schemas/userSchema";
-import { updateImage } from "../utils/updateImage";
 
 import { FastifyReply, FastifyRequest } from "fastify";
+import { uploadImage } from "../utils/upload-image";
 
 type UserToUpdate = z.infer<typeof userToUpdateSchema>;
 export class UserController {
@@ -40,7 +40,7 @@ export class UserController {
       },
       select: {
         name: true,
-        avatar_url: true,
+        avatarUrlId: true,
         email: true,
         username: true,
         id: true,
@@ -83,12 +83,12 @@ export class UserController {
 
     const userToSend = await prisma.user.findUnique({
       where: {
-        email,
+        email: user.email,
       },
       select: {
         email: true,
         name: true,
-        avatar_url: true,
+        avatarUrlId: true,
         username: true,
         id: true,
       },
@@ -100,13 +100,11 @@ export class UserController {
   async update(userToUpdate: UserToUpdate, userId: number) {
     const { username, avatarUrl, email, password, bio, name } = userToUpdate;
 
-    const user = await prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-    });
+    console.log(userToUpdate);
 
-    const destination = await updateImage(user?.avatar_url, avatarUrl);
+    const buffer: Buffer = await avatarUrl.data;
+
+    const avatarId = await uploadImage(avatarUrl, buffer);
 
     const updatedUser = await prisma.user.update({
       where: {
@@ -116,16 +114,17 @@ export class UserController {
         username,
         email,
         password,
-        avatar_url: destination,
+        avatarUrlId: avatarId,
         bio,
         name,
       },
       select: {
         email: true,
         name: true,
-        avatar_url: true,
+        avatarUrlId: true,
         username: true,
         id: true,
+        bio: true,
       },
     });
 
@@ -140,9 +139,10 @@ export class UserController {
       select: {
         email: true,
         name: true,
-        avatar_url: true,
+        avatarUrlId: true,
         username: true,
         id: true,
+        bio: true,
       },
     });
 
@@ -156,7 +156,7 @@ export class UserController {
       select: {
         email: true,
         name: true,
-        avatar_url: true,
+        avatarUrlId: true,
         username: true,
         id: true,
       },

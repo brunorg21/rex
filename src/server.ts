@@ -12,29 +12,13 @@ import fastifyMultipart from "@fastify/multipart";
 const app = fastify();
 
 app.register(cors, {
-  origin: "https://rex-front.onrender.com",
+  origin: true,
   allowedHeaders: [
     "Content-Type",
     "Authorization",
     "Access-Control-Allow-Origin",
   ],
   methods: ["POST", "DELETE", "PUT", "GET", "OPTIONS"],
-});
-
-app.register(fastifyStatic, {
-  root: join(__dirname, "../uploads"),
-  prefix: "/uploads/",
-});
-
-app.register(fastifyMultipart, {
-  attachFieldsToBody: "keyValues",
-  onFile: (part: any) => {
-    part.value = {
-      filename: part.filename,
-      mimetype: part.mimetype,
-      data: part.toBuffer(),
-    };
-  },
 });
 
 app.register(commentRoutes);
@@ -50,5 +34,5 @@ app
     port: PORT,
   })
   .then(() => {
-    console.log("Server is running... ");
+    console.log("Server is running... " + PORT);
   });
