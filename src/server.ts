@@ -32,6 +32,7 @@ const PORT = Number(process.env.PORT);
 app
   .listen({
     port: PORT,
+    host: process.env.NODE_ENV !== "development" ? "0.0.0.0" : "",
   })
   .then(() => {
     console.log("Server is running... " + PORT);
