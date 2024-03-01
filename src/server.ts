@@ -12,7 +12,7 @@ import fastifyMultipart from "@fastify/multipart";
 const app = fastify();
 
 app.register(cors, {
-  origin: true,
+  origin: "https://rex-front.onrender.com",
   allowedHeaders: [
     "Content-Type",
     "Authorization",
