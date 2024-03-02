@@ -16,7 +16,6 @@ export function getDriveService() {
         console.error("Erro ao criar o arquivo:", err);
         return;
       }
-      console.log("Arquivo criado com sucesso!");
     });
   }
 

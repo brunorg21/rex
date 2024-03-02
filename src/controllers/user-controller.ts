@@ -98,9 +98,7 @@ export class UserController {
   }
 
   async update(userToUpdate: UserToUpdate, userId: number) {
-    const { username, avatarUrl, email, password, bio, name } = userToUpdate;
-
-    console.log(userToUpdate);
+    const { username, avatarUrl, bio, name } = userToUpdate;
 
     const buffer: Buffer = await avatarUrl.data;
 
@@ -112,8 +110,6 @@ export class UserController {
       },
       data: {
         username,
-        email,
-        password,
         avatarUrlId: avatarId,
         bio,
         name,

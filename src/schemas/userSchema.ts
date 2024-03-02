@@ -14,11 +14,8 @@ export const userSchemaToLogin = z.object({
 
 export const userToUpdateSchema = z.object({
   username: z.string().optional(),
-  password: z.string().optional(),
-  email: z.string().optional(),
   avatarUrl: z
     .any()
-    .optional()
     .refine((file) => !!file && file.mimetype.startsWith("image"), {
       message: "Somente arquivos de imagem são permitidos",
     }),

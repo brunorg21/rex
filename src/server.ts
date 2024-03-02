@@ -4,15 +4,15 @@ import { userRoutes } from "./routes/user-routes";
 import { postRoutes } from "./routes/post-routes";
 import { commentRoutes } from "./routes/comment-routes";
 import { emailRoute } from "./routes/email-route";
-import fastifyStatic from "@fastify/static";
-import { join } from "path";
 import { followerRoute } from "./routes/follower-route";
-import fastifyMultipart from "@fastify/multipart";
 
 const app = fastify();
 
 app.register(cors, {
-  origin: "https://rex-front.onrender.com",
+  origin:
+    process.env.NODE_ENV !== "development"
+      ? "https://rex-front.onrender.com"
+      : "http://localhost:3000",
   allowedHeaders: [
     "Content-Type",
     "Authorization",
@@ -32,7 +32,7 @@ const PORT = Number(process.env.PORT);
 app
   .listen({
     port: PORT,
-    host: "0.0.0.0",
+    host: process.env.NODE_ENV !== "development" ? "0.0.0.0" : "",
   })
   .then(() => {
     console.log("Server is running... " + PORT);
